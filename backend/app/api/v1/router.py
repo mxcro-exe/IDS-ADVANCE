@@ -1,0 +1,91 @@
+"""
+PREVENT-X API v1 Router Assembly
+"""
+
+from fastapi import APIRouter
+from backend.app.api.v1.endpoints import (
+    assets,
+    attack_surface,
+    audit_logs,
+    auth,
+    organizations,
+    roles,
+    system,
+    users,
+    vulnerabilities,
+    attack_paths,
+    zero_trust,
+    virtual_patching,
+    security_validation,
+    monitoring,
+    firewall,
+    dynamic_blocking,
+    rate_limiting,
+    payload_normalization,
+    advanced_detection,
+    traffic_replay,
+    honeypot,
+    geoip,
+    ml_classifier,
+)
+
+api_router = APIRouter()
+
+# System endpoints: /health, /ready, /system/info
+api_router.include_router(system.router)
+
+# Authentication & Session lifecycle
+api_router.include_router(auth.router)
+
+# Tenant Organization Management
+api_router.include_router(organizations.router)
+
+# User Provisioning and RBAC
+api_router.include_router(users.router)
+api_router.include_router(roles.router)
+
+# Managed Asset Protection Scope
+api_router.include_router(assets.router)
+
+# Attack Surface Intelligence Engine (MOD-01)
+api_router.include_router(attack_surface.router)
+
+# Advanced Vulnerability Mapping Engine (MOD-02)
+api_router.include_router(vulnerabilities.router)
+
+# Attack Path and Prevention Engine (MOD-03)
+api_router.include_router(attack_paths.router)
+
+# Audit Log Ingestion and Compliance Trail
+api_router.include_router(audit_logs.router)
+
+# Zero Trust & Threat Intelligence Engine (MOD-04, MOD-05)
+api_router.include_router(zero_trust.router)
+
+# Intelligent Virtual Patching & Reverse Proxy Engine (MOD-06, MOD-08)
+api_router.include_router(virtual_patching.router)
+
+# Automated Security Validation & Reliable Rollback Engine (MOD-10, MOD-08)
+api_router.include_router(security_validation.router)
+
+# Real-Time Monitoring & Centralized Security Management Platform (MOD-09, MOD-12)
+api_router.include_router(monitoring.router)
+
+# Advanced Network Defense: Windows Defender Firewall Integration
+api_router.include_router(firewall.router)
+api_router.include_router(dynamic_blocking.router)
+api_router.include_router(rate_limiting.router)
+api_router.include_router(payload_normalization.router)
+api_router.include_router(advanced_detection.router)
+api_router.include_router(traffic_replay.router)
+api_router.include_router(honeypot.router)
+api_router.include_router(geoip.router)
+api_router.include_router(ml_classifier.router)
+
+
+
+
+
+
+
+

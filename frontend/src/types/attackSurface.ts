@@ -1,0 +1,200 @@
+/**
+ * PREVENT-X Attack Surface TypeScript Types
+ */
+
+export interface RiskFactorDetail {
+  name: string;
+  factor_key: string;
+  score: number;
+  max_weight: number;
+  impact: string;
+  description: string;
+}
+
+export interface RiskScoreBreakdown {
+  total_score: number;
+  risk_level: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  factors: RiskFactorDetail[];
+  interpretation: string;
+}
+
+export interface DiscoveryJob {
+  id: string;
+  organization_id: string;
+  asset_id: string;
+  target_domain: string;
+  discovery_policy: 'PUBLIC_PASSIVE' | 'AUTHORIZED_INTERNAL';
+  status: 'PENDING' | 'QUEUED' | 'RUNNING' | 'COMPLETED' | 'PARTIALLY_COMPLETED' | 'FAILED' | 'CANCELLED';
+  progress_percent: number;
+  current_stage: string;
+  authorized_scope: string;
+  initiated_by_user_id?: string;
+  authorization_confirmed: boolean;
+  authorized_at: string;
+  started_at?: string;
+  completed_at?: string;
+  error_message?: string;
+  stage_errors?: string;
+  domains_discovered_count: number;
+  findings_count: number;
+  initial_exposure_score?: number;
+  risk_score_details?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DNSRecord {
+  id: string;
+  domain_id: string;
+  domain_name: string;
+  record_type: string;
+  record_value: string;
+  ttl?: number;
+  source: string;
+  resolution_status: string;
+  collected_at: string;
+}
+
+export interface CertificateEvidence {
+  id: string;
+  domain_id: string;
+  issuer_name?: string;
+  common_name?: string;
+  subject_alt_names?: string;
+  not_before?: string;
+  not_after?: string;
+  is_expired: boolean;
+  is_wildcard: boolean;
+  serial_number?: string;
+  source: string;
+  logged_at?: string;
+}
+
+export interface RDAPRecord {
+  id: string;
+  domain_id: string;
+  handle?: string;
+  registrar_name?: string;
+  whois_server?: string;
+  registration_date?: string;
+  expiration_date?: string;
+  last_updated_date?: string;
+  nameservers?: string;
+  status_codes?: string;
+  asn?: string;
+}
+
+export interface DiscoveredDomain {
+  id: string;
+  organization_id: string;
+  asset_id: string;
+  job_id: string;
+  domain_name: string;
+  parent_domain?: string;
+  is_subdomain: boolean;
+  discovery_source: string;
+  confidence_score: number;
+  first_observed_at: string;
+  last_observed_at: string;
+  dns_records?: DNSRecord[];
+  certificates?: CertificateEvidence[];
+  rdap?: RDAPRecord;
+}
+
+export interface ExposureFinding {
+  id: string;
+  organization_id: string;
+  asset_id: string;
+  job_id: string;
+  target: string;
+  finding_category: string;
+  verification_status: 'POTENTIAL_DANGLING_CNAME' | 'UNVERIFIED_RESOURCE' | 'VERIFIED_UNCLAIMED_RESOURCE' | 'CONFIRMED_TAKEOVER';
+  evidence_nature: 'OBSERVED_FACT' | 'POTENTIAL_WEAKNESS' | 'VERIFIED_ISSUE' | 'UNVERIFIED_FINDING';
+  severity: 'INFO' | 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  confidence: string;
+  title: string;
+  description: string;
+  evidence: string;
+  discovery_source: string;
+  first_observed_at: string;
+  last_observed_at: string;
+  current_status: string;
+}
+
+export interface AttackSurfaceOverview {
+  total_discovered_domains: number;
+  total_public_ips: number;
+  average_exposure_score: number;
+  active_findings_count: number;
+  findings_by_severity: Record<string, number>;
+  findings_by_category: Record<string, number>;
+  recent_jobs: DiscoveryJob[];
+}
+
+export interface DiscoveryJobCreatePayload {
+  asset_id: string;
+  target_domain?: string;
+  authorization_confirmed: boolean;
+  discovery_policy?: 'PUBLIC_PASSIVE' | 'AUTHORIZED_INTERNAL';
+}
+
+export type ScanProfile = 'BASIC' | 'STANDARD' | 'CUSTOM';
+export type ActiveScanStatus = 'PENDING' | 'RUNNING' | 'COMPLETED' | 'CANCELLED' | 'FAILED';
+export type ServiceState = 'OPEN' | 'CLOSED' | 'FILTERED';
+export type ServiceConfidence = 'CONFIRMED_OBSERVATION' | 'INFERRED_SERVICE';
+
+export interface ActiveScanJob {
+  id: string;
+  organization_id: string;
+  asset_id: string;
+  target: string;
+  target_ip?: string;
+  scan_profile: ScanProfile;
+  selected_ports: string;
+  max_concurrency: number;
+  timeout_seconds: number;
+  status: ActiveScanStatus;
+  progress_percent: number;
+  current_stage: string;
+  authorized_scope: string;
+  initiated_by_user_id?: string;
+  authorization_confirmed: boolean;
+  authorized_at: string;
+  started_at?: string;
+  completed_at?: string;
+  error_message?: string;
+  scope_validation_result?: string;
+  services_discovered_count: number;
+  ports_scanned_count: number;
+  discovery_policy: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DiscoveredService {
+  id: string;
+  organization_id: string;
+  asset_id: string;
+  job_id: string;
+  target: string;
+  target_ip: string;
+  port: number;
+  protocol: string;
+  service_name: string;
+  state: ServiceState;
+  confidence: ServiceConfidence;
+  banner?: string;
+  tls_metadata?: string;
+  http_metadata?: string;
+  raw_evidence?: string;
+  discovered_at: string;
+}
+
+export interface ActiveScanCreatePayload {
+  asset_id: string;
+  scan_profile: ScanProfile;
+  custom_ports?: number[];
+  authorization_confirmed: boolean;
+}
+
+
